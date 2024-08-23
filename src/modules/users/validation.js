@@ -22,6 +22,7 @@ try {
         first_name: Joi.string().required(),
          last_name:Joi.string().required(),
           number: Joi.string().required(),
+          email: Joi.string().email().required(),
           username: Joi.string().alphanum().min(3).max(30).required(),
            password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     }).required();
@@ -31,8 +32,8 @@ try {
     req.validatedBody = validationResult;
     next();
 } catch (error) {
-    console.log(error)
-    res.json({message: error.message})
+    console.log(error);
+    res.status(400).json({ message: error.message });
 }
 
 }
