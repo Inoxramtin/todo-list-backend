@@ -26,10 +26,10 @@ const getUserById =async(req, res, next) =>{
 
 const userCreate = async (req , res, next) => {
     try {
-        const {first_name, last_name, number, username, password} = req.body;
-         await createUserService(first_name, last_name, number, username, password);
-        res.json({
-          message: `the user added to the database.`
+        const {first_name, last_name, number, email, username, password} = req.body;
+         await createUserService(first_name, last_name, number, email, username, password);
+        res.status(201).json({
+          message: `user  created successfully`
         })
     } catch (error) {
         console.log(error)
@@ -58,8 +58,28 @@ const userUpdate = async (req , res, next) => {
     }
 }
 
+
+
+
+const loginUserCreate = async (req , res, next) => {
+    try {
+        const { username, password} = req.body;
+        const jwt = await createUserService( username, password);
+        res.status(200).json({
+          jwt: jwt
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({
+            message: error.message
+        });
+        
+    }
+}
+
 export {
     getUserById,
     userCreate,
-    userUpdate
+    userUpdate,
+    loginUserCreate
 }
