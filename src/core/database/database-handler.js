@@ -12,8 +12,7 @@ const query = async (query , params) =>{
         const res = await client.query(query, params)
         return res;
      } catch (err) {
-        console.error(err);
-        return null;
+         throw err;
      } finally {
         console.log("query finally")
         await client.end()
