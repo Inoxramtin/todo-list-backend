@@ -1,4 +1,4 @@
-import{getTaskService, getTaskServiceId,createTaskService, updateTaskService, deleteTaskService} from '../../model/service/seviceTask.js';
+import{getTaskService, getTaskServiceId,createTaskService, updateTaskService, deleteTaskService} from '../../service/seviceTask.js';
 
 const taskByUserId = async (req , res, next)=> {
     try {
