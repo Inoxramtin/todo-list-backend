@@ -8,7 +8,7 @@ const POSTGRES_CREDENTIALS = {
 };
 
 const JWT_SECRET = {
-    signKey: process.env['SIGN_KEY']
+    signKey: process.env['SIGN_KEY'],
 }
 
 export {
