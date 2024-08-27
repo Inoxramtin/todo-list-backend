@@ -1,23 +1,34 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from "../secrets/index.js";
 
 function jwtSign(data){
-return jwt.sign(data, JWT_SECRET)
+    console.log("JWT_SECRET =====",  JWT_SECRET );
+    return jwt.sign(data, JWT_SECRET.signKey);
 }
 
-
-
-function jwtvalidate(jwt){
+function jwtvalidate(token){
     try {
-        return jwt.verify(jwt, JWT_SECRET.signKey )
+        return jwt.verify(token, JWT_SECRET.signKey);
     } catch (error) {
         console.log(error);
-        return null;
+        throw new Error("Invalid JWT Token"); 
     }
 }
 
 
-export{
+const blacklist = new Set();
+const addToBlacklist = (token) => {
+    blacklist.add(token);
+};
+
+ const isTokenBlacklisted = (token) => {
+    return blacklist.has(token);
+};
+
+
+export {
     jwtSign,
-    jwtvalidate
-}
+    jwtvalidate,
+    addToBlacklist,
+    isTokenBlacklisted
+};
