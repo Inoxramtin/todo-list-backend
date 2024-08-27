@@ -1,5 +1,5 @@
 
-import {getTasksListByUserId, getTasksListById, createTask, updateTask, deleteTaskById} from '../task/task.js'
+import {getTasksListByUserId, getTasksListById, createTask, updateTask, deleteTaskById} from '../model/tasks/task.js'
 
 async function getTaskService(userId){
     const task = await getTasksListByUserId(userId) ;

@@ -1,4 +1,4 @@
-import {getUsersById as getUsersByIdService, createUsers,updateUsers,getUsersByUsername} from '../model/user/user.js'
+import {getUsersById as getUsersByIdService, createUsers,updateUsers,getUsersByUsername} from '../model/users/users.js'
 import { hash , validateHash} from '../core/utils/encryption/index.js';
 import { jwtSign } from '../core/auth/jwt-auth.js';
 
