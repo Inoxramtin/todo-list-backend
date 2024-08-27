@@ -9,14 +9,14 @@ async function getUsersById(id){
     
 }
 
-async function createUsers(first_name,last_name , number,username,password){
+async function createUsers(first_name,last_name , number,email ,username,password){
     const sql = `
     INSERT INTO users
-    (first_name, last_name, number, username,password)
+    (first_name, last_name, number, email,username,password)
     values
-    ($1 , $2 , $3, $4, $5);
+    ($1 , $2 , $3, $4, $5, $6);
     `;
-    const result = await query(sql,[first_name, last_name, number, username,password]);
+    const result = await query(sql,[first_name, last_name, number,email, username,password]);
     return result;
 }
 
@@ -31,3 +31,24 @@ const result = await query(sql, [first_name, last_name, number, username,passwor
 return result;
 
 }
+
+
+
+async function getUsersByUsername(username){
+    const sql = `
+    select * from public.users
+    where username=$1
+    `;
+    const result = await query(sql,[username]);
+    return result.rows[0];
+}
+
+
+
+
+export{
+    updateUsers,
+    getUsersById,
+    createUsers,
+    getUsersByUsername
+};
