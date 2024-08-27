@@ -1,5 +1,5 @@
-import bcrypt, { hash } from "bcrypt";
-import { Bcrypt_CONFIG  } from "../../configs/index.js";
+import bcrypt from "bcrypt";
+import { Bcrypt_CONFIG } from "../../configs/index.js";
 
 async function hash(input) {
     try {
