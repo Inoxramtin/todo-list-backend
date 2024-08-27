@@ -1,5 +1,5 @@
 
-import{getUsersService,createUserService, updateUsersService} from '../../model/service/seviceUser.js'
+import{getUsersService,createUserService, updateUsersService, loginUserService} from '../../service/seviceUser.js'
 
 
 
@@ -64,7 +64,7 @@ const userUpdate = async (req , res, next) => {
 const loginUserCreate = async (req , res, next) => {
     try {
         const { username, password} = req.body;
-        const jwt = await createUserService( username, password);
+        const jwt = await loginUserService( username, password);
         res.status(200).json({
           jwt: jwt
         })
@@ -76,6 +76,7 @@ const loginUserCreate = async (req , res, next) => {
         
     }
 }
+
 
 export {
     getUserById,
