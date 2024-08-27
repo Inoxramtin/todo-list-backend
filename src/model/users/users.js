@@ -42,6 +42,12 @@ async function getUsersByUsername(username){
     const result = await query(sql,[username]);
     return result.rows[0];
 }
+ 
+async function deleteUsers(id) {
+    const sql =`DELETE FROM "users" WHERE id = $1`;
+    const result = await query(sql,[id]);
+    return result.rows[0];
+}
 
 
 
@@ -50,5 +56,6 @@ export{
     updateUsers,
     getUsersById,
     createUsers,
-    getUsersByUsername
+    getUsersByUsername,
+    deleteUsers
 };

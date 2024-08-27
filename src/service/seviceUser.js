@@ -1,4 +1,4 @@
-import {getUsersById as getUsersByIdService, createUsers,updateUsers,getUsersByUsername} from '../model/users/users.js'
+import {getUsersById as getUsersByIdService, createUsers,updateUsers,getUsersByUsername,deleteUsers} from '../model/users/users.js'
 import { hash , validateHash} from '../core/utils/encryption/index.js';
 import { jwtSign } from '../core/auth/jwt-auth.js';
 
@@ -43,7 +43,12 @@ async function loginUserService(username, password) {
     const userjwt = jwtSign(jwtUserData)
     return userjwt
 }
+ 
 
+async function deleteUsersService(userId){
+    const user = await deleteUsers(userId) ;
+    return user
+}
 
 
 
@@ -53,6 +58,6 @@ export{
     getUsersService,
     createUserService,
     updateUsersService,
-    loginUserService
-
+    loginUserService,
+    deleteUsersService
 }

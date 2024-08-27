@@ -1,11 +1,11 @@
 
-import{getUsersService,createUserService, updateUsersService, loginUserService} from '../../service/seviceUser.js'
+import{getUsersService,createUserService, updateUsersService, loginUserService, deleteUsersService} from '../../service/seviceUser.js'
 
 
 
 const getUserById =async(req, res, next) =>{ 
     try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const user =  await getUsersService(userId);
       if(user === null ){
         res.status(404).json({
@@ -42,9 +42,9 @@ const userCreate = async (req , res, next) => {
 
 const userUpdate = async (req , res, next) => {
     try {
-        const todoId = req.params.id;
+        const userId = req.user.id;
         const {first_name,last_name , number,username,password} = req.body
-        const updateId = await updateUsersService(todoId,first_name,last_name , number,username,password);
+        const updateId = await updateUsersService(userId,first_name,last_name , number,username,password);
         res.json({
             message:`update is complet`
         })
@@ -77,10 +77,34 @@ const loginUserCreate = async (req , res, next) => {
     }
 }
 
+const deleteUserById =async(req, res, next) =>{ 
+    try {
+    const userId = req.user.id;
+    const user =  await deleteUsersService(userId);
+      if(user === null ){
+        res.status(404).json({
+            message: `the user with id=${userId} is not exist `
+        });
+    }else{
+        res.json('Your account has been successfully deleted');
+    }
+} catch (error) {
+    console.log(error)
+    res.status(500).json({
+        message: error.message
+    });
+}
+
+}
+
+
+
+
 
 export {
     getUserById,
     userCreate,
     userUpdate,
-    loginUserCreate
+    loginUserCreate,
+    deleteUserById
 }
