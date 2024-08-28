@@ -1,8 +1,8 @@
-import{getTaskService, getTaskServiceId,createTaskService, updateTaskService, deleteTaskService} from '../../service/seviceTask.js';
+import{getTaskService, getTaskServiceId, updateTaskService, deleteTaskService, addTask} from '../../service/seviceTask.js';
 
 const taskByUserId = async (req , res, next)=> {
     try {
-        const taskUserId = req.params.user_id;
+        const taskUserId = req.user.user_id;
         const task =  await getTaskService(taskUserId);
           if(!task || task.length <= 0 ){
             res.status(404).json({
@@ -22,7 +22,7 @@ const taskByUserId = async (req , res, next)=> {
 
 const taskById = async (req , res, next)=> {
     try {
-        const taskId = req.params.id;
+        const taskId = req.user.id;
         const task =  await getTaskServiceId(taskId);
           if(!task || task.length <= 0 ){
             res.status(404).json({
@@ -39,45 +39,47 @@ const taskById = async (req , res, next)=> {
     }
 }
 
-const taskcreate = async (req , res) => {
+const taskCreate = async (req, res) => {
     try {
-        const {user_id,title , description, is_completed} = req.body;
-         await createTaskService(user_id,title , description, is_completed);
+        const { categoryName, description, is_completed } = req.body;
+        const userId = req.user ? req.user.id : null; 
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is missing' });
+        }
+
+        const task = await addTask(categoryName, description, is_completed, userId);
         res.json({
-          message: `the todo added to the database.`
-        })
+            message: 'Task added successfully.',
+            task: task  
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
             message: error.message
         });
-        
     }
 }
 
-const taskUpdate =  async (req , res, next) => {
-    try {
-        const taskId = req.params.id;
-        const {title, description, is_completed} = req.body
-        const updateId = await updateTaskService(taskId, title, description, is_completed);
-        res.json({
-            message:`update is complet`
-        })
+async function updateTask(req, res) {
+    const { categoryName, newDescription, description, is_completed } = req.body;
+    const userId = req.user.id; 
 
-    }catch (error) {
-        console.log(error)
-        res.status(500).json({
-            message: error.message
-        });
-        
+    try {
+        const updatedTask = await updateTaskService(categoryName, newDescription, description, is_completed, userId);
+        res.status(200).json(updatedTask);
+    } catch (err) {
+        console.error(err.message);
+        res.status(400).json({ error: err.message });
     }
 }
 
 
-const taskDelet =  async(req, res, next) => {
+
+const taskDelete =  async(req, res, next) => {
     try {
-        const taskId = req.params.id;
-        const deletTask = await deleteTaskService(taskId);
+        const taskId = req.user.id;
+        const deletTask = await deleteTaskService(taskName,taskId);
         res.json({
             message:`Task deleted`
         })
@@ -95,7 +97,7 @@ const taskDelet =  async(req, res, next) => {
 export{
     taskByUserId,
     taskById,
-    taskcreate,
-    taskUpdate,
-    taskDelet
+    taskCreate,
+    updateTask,
+    taskDelete
 }
