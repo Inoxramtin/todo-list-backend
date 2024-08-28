@@ -1,19 +1,19 @@
 import { query } from '../../core/database/database-handler.js';
 
 
-async function getTasksListByUserId(user_id){
-    const sql = 'SELECT * FROM tasks_list WHERE user_id = $1'
-    const result = await query(sql, [user_id]);
-    return result.rows;
+// async function getTasksListByUserId(user_id){
+//     const sql = 'SELECT * FROM tasks_list WHERE user_id = $1'
+//     const result = await query(sql, [user_id]);
+//     return result.rows;
     
-};
+// };
 
-async function getTasksListById(id){
-    const sql = 'SELECT * FROM tasks_list WHERE id = $1'
-    const result = await query(sql, [id]);
-    return result.rows[0];
+// async function getTasksListById(id){
+//     const sql = 'SELECT * FROM tasks_list WHERE id = $1'
+//     const result = await query(sql, [id]);
+//     return result.rows[0];
     
-}
+// }
 
 
 async function deleteTaskById(id){
@@ -61,12 +61,24 @@ async function updateTask(taskId, categoryId, description, is_completed) {
     return result.rows[0];
 }
 
+async function getTasksByCategoryId(categoryId, userId) {
+    const sql = `
+        SELECT tasks.*
+            FROM tasks
+            INNER JOIN category ON tasks.category_id = category.id
+            WHERE tasks.category_id = $1 AND category.user_id = $2;
+    `;
+    const result = await query(sql, [categoryId, userId]);
+    return result.rows;
+}
+
+
+
 export{
-    getTasksListByUserId,
-    getTasksListById,
     createTask,
     updateTask,
     deleteTaskById,
     findCategoryIdByName,
-    findTaskIdByUserCategoryAndTitle
+    findTaskIdByUserCategoryAndTitle,
+    getTasksByCategoryId
 }

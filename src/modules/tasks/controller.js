@@ -1,4 +1,4 @@
-import{getTaskService, getTaskServiceId, updateTaskService, deleteTaskService, addTask} from '../../service/seviceTask.js';
+import{getTaskService, getTaskServiceId, updateTaskService, deleteTaskService, addTask, TaskListByCategoryIdService} from '../../service/seviceTask.js';
 
 const taskByUserId = async (req , res, next)=> {
     try {
@@ -62,7 +62,7 @@ const taskCreate = async (req, res) => {
 }
 
 async function updateTask(req, res) {
-    const { categoryName, newDescription, description, is_completed } = req.body;
+    const { id, categoryName, newDescription, description, is_completed } = req.body;
     const userId = req.user.id; 
 
     try {
@@ -92,6 +92,23 @@ const taskDelete =  async(req, res, next) => {
     }
 }
 
+const taskListByIdCategory = async (req, res, next) => {
+    try {
+        const userId = req.user.id;  // Assumes req.user is populated by middleware (e.g., JWT authentication)
+        const { categoryId } = req.params;  // Assumes categoryId is provided in URL params
+        // Fetch tasks for the given categoryId and userId
+        const TaskList = await TaskListByCategoryIdService(categoryId, userId);
+
+        // Respond with the task list
+        res.json({ TaskList });
+    } catch (error) {
+        console.error('Error in taskListByIdCategory controller:', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};
 
 
 export{
@@ -99,5 +116,6 @@ export{
     taskById,
     taskCreate,
     updateTask,
-    taskDelete
+    taskDelete,
+    taskListByIdCategory
 }

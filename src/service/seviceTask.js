@@ -1,5 +1,5 @@
 
-import {getTasksListByUserId, getTasksListById, createTask, updateTask, deleteTaskById,findCategoryIdByName,findTaskIdByUserCategoryAndTitle} from '../model/tasks/task.js'
+import { createTask, updateTask, deleteTaskById,findCategoryIdByName,findTaskIdByUserCategoryAndTitle,  getTasksByCategoryId} from '../model/tasks/task.js'
 
 async function getTaskService(userId){
     const task = await getTasksListByUserId(userId) ;
@@ -42,10 +42,21 @@ async function addTask(categoryName, description, is_completed, userId) {
     return task;
 }
 
+
+async function TaskListByCategoryIdService(categoryId, userId) {
+    try {
+        const tasks = await getTasksByCategoryId(categoryId, userId);
+        return tasks;
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error; // Re-throw the error to be handled by the controller
+    }
+}
 export{
     getTaskService,
     getTaskServiceId,
     updateTaskService,
     deleteTaskService,
-    addTask
+    addTask,
+    TaskListByCategoryIdService
 }

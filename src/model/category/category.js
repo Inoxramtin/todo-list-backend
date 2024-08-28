@@ -30,10 +30,19 @@ async function deleteCategory(userId, name_category){
          return result;
     
     }
-
+    
+    async function getCategoryById(user_id){
+        const sql = `
+        SELECT * FROM category
+        WHERE user_id = $1;
+    `;
+        const result = await query(sql, [user_id]);
+        return result.rows;
+    }
 
 export{
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getCategoryById
 }

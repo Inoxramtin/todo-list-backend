@@ -1,5 +1,5 @@
 import express from 'express' ;
-import{taskByUserId, taskById, taskCreate,updateTask , taskDelete} from './controller.js'
+import{taskByUserId, taskListByIdCategory, taskCreate,updateTask , taskDelete} from './controller.js'
 import{getTasksByIdValidator, getTasksByUserIdValidator,updateTasksValidator,createTasksValidator}from './validation.js'
 import{authValidationMiddlewares} from '../../core/middlewares/auth-midderwares.js'
 const routerTask = express.Router();
@@ -9,16 +9,15 @@ const routerTask = express.Router();
 
 
 
-routerTask.get('/api/tasks_list/:user_id', getTasksByUserIdValidator ,taskByUserId );
 
-routerTask.get('/api/tasks_id/:id',getTasksByIdValidator , taskById);
-
+routerTask.get('/api/tasks_list/:id', authValidationMiddlewares, taskListByIdCategory);
 
 
-routerTask.post('/api/tasks_list',authValidationMiddlewares, taskCreate)
+
+routerTask.post('/api/createTask',authValidationMiddlewares, taskCreate)
 
 
-routerTask.put('/api/tasks_list', authValidationMiddlewares , updateTask );
+routerTask.put('/api/tasksUpdate/:id', authValidationMiddlewares , updateTask );
 
 routerTask.delete('/api/tasks_list/:id',getTasksByIdValidator ,taskDelete)
 

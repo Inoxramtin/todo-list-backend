@@ -1,4 +1,4 @@
-import {createCategory, deleteCategory, updateCategory} from "../model/category/category.js"
+import {createCategory, deleteCategory, updateCategory, getCategoryById} from "../model/category/category.js"
 
 
 async function createCategoryService(name_category,user_id){
@@ -16,8 +16,16 @@ async function deleteCategoryService(name_category,userId){
     return category;
 }
 
+async function getCategoriesServiceById(userId){
+    const category = await getCategoryById(userId) ;
+    return category;
+}
+
+
+
 export{
     createCategoryService,
     updateCategoryService,
-    deleteCategoryService
+    deleteCategoryService,
+    getCategoriesServiceById
 }

@@ -9,6 +9,7 @@ async function getUsersById(id){
     
 }
 
+
 async function createUsers(first_name,last_name , number,email ,username,password){
     const sql = `
     INSERT INTO users

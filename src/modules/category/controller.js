@@ -1,4 +1,4 @@
-import {createCategoryService, updateCategoryService,  deleteCategoryService} from '../../service/serviceCategory.js'
+import {createCategoryService, updateCategoryService,  deleteCategoryService, getCategoriesServiceById} from '../../service/serviceCategory.js'
 
 
 
@@ -55,9 +55,25 @@ const categoryDelete =  async(req, res, next) => {
 }
 
 
+const categoryGetById =  async(req, res, next) => {
+    try {
+        const categoryId = req.user.id;
+        const categoryGetId = await  getCategoriesServiceById(categoryId);
+        res.json({ categoryGetId})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+
 
 export{
     createCategory,
     categoryUpdate,
-    categoryDelete
+    categoryDelete,
+    categoryGetById
 }
