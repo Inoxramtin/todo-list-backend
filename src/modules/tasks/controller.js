@@ -1,121 +1,63 @@
-import{getTaskService, getTaskServiceId, updateTaskService, deleteTaskService, addTask, TaskListByCategoryIdService} from '../../service/seviceTask.js';
+import{createTaskService, updateTaskService, getTaskByCategoryIdService, deleteTaskService} from "../../service/seviceTask.js"
 
-const taskByUserId = async (req , res, next)=> {
-    try {
-        const taskUserId = req.user.user_id;
-        const task =  await getTaskService(taskUserId);
-          if(!task || task.length <= 0 ){
-            res.status(404).json({
-                message: `the task with user_id=${taskUserId} is not exist `
-            });
-        }else{
-            res.json(task);
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            message: error.message
-        });
-    }
-}
-
-
-const taskById = async (req , res, next)=> {
-    try {
-        const taskId = req.user.id;
-        const task =  await getTaskServiceId(taskId);
-          if(!task || task.length <= 0 ){
-            res.status(404).json({
-                message: `the task with user_id=${taskId} is not exist `
-            });
-        }else{
-            res.json(task);
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            message: error.message
-        });
-    }
-}
-
-const taskCreate = async (req, res) => {
-    try {
-        const { categoryName, description, is_completed } = req.body;
-        const userId = req.user ? req.user.id : null; 
-
-        if (!userId) {
-            return res.status(400).json({ message: 'User ID is missing' });
-        }
-
-        const task = await addTask(categoryName, description, is_completed, userId);
-        res.json({
-            message: 'Task added successfully.',
-            task: task  
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: error.message
-        });
-    }
-}
-
-async function updateTask(req, res) {
-    const { id, categoryName, newDescription, description, is_completed } = req.body;
+async function createTaskController(req, res, next) {
     const userId = req.user.id; 
-
+    const { category_id, description, is_completed } = req.body; 
     try {
-        const updatedTask = await updateTaskService(categoryName, newDescription, description, is_completed, userId);
-        res.status(200).json(updatedTask);
-    } catch (err) {
-        console.error(err.message);
-        res.status(400).json({ error: err.message });
-    }
-}
-
-
-
-const taskDelete =  async(req, res, next) => {
-    try {
-        const taskId = req.user.id;
-        const deletTask = await deleteTaskService(taskName,taskId);
-        res.json({
-            message:`Task deleted`
-        })
-        
+      const task = await createTaskService(userId, category_id, description, is_completed);
+      res.status(201).json(task);
     } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            message: error.message
-        });
+      console.error('Error creating task:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+  }
 
-const taskListByIdCategory = async (req, res, next) => {
+
+  async function updateTaskController(req, res, next) {
+    const userId = req.user.id; 
+    const { task_id } = req.params;  
+    const {category_id, description, is_completed } = req.body; 
+  
     try {
-        const userId = req.user.id;  // Assumes req.user is populated by middleware (e.g., JWT authentication)
-        const { categoryId } = req.params;  // Assumes categoryId is provided in URL params
-        // Fetch tasks for the given categoryId and userId
-        const TaskList = await TaskListByCategoryIdService(categoryId, userId);
-
-        // Respond with the task list
-        res.json({ TaskList });
+      const updatedTask = await updateTaskService(task_id, userId, category_id, description, is_completed);
+      if (!updatedTask) {
+        return res.status(404).json({ error: 'Task not found or you are not authorized' });
+      }
+      res.status(200).json(updatedTask);
     } catch (error) {
-        console.error('Error in taskListByIdCategory controller:', error);
-        res.status(500).json({
-            message: 'Internal Server Error',
-            error: error.message
-        });
+      console.error('Error updating task:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-};
+  }
 
+  async function getTasksByCategoryIdController(req, res, next) {
+    const userId = req.user.id
+    const { category_id } = req.params; 
 
-export{
-    taskByUserId,
-    taskById,
-    taskCreate,
-    updateTask,
-    taskDelete,
-    taskListByIdCategory
-}
+    try {
+      const tasks = await getTaskByCategoryIdService(userId, category_id);
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error('Error retrieving tasks:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  
+  async function deleteTaskController(req, res, next) {
+    const userId = req.user.id; 
+    const { id, category_id} = req.body; 
+    try {
+      const task = await deleteTaskService(userId, id,  category_id);
+      res.status(201).json("delete  a task is complet");
+    } catch (error) {
+      console.error('Error creating task:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  
+  export{
+    createTaskController,
+    updateTaskController,
+    getTasksByCategoryIdController,
+    deleteTaskController
+  };

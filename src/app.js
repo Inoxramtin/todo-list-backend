@@ -2,8 +2,8 @@ import 'dotenv/config'
 import express from 'express' ;
 import{portServer} from './core/configs/index.js'
 import { routerUser as User } from './modules/users/rout.js';
-import{routerTask as Task} from './modules/tasks/rout.js';
 import{routerCategory as  Category } from './modules/category/rout.js'
+import{routerTask as Task} from "./modules/tasks/rout.js"
 import{ apiLoggerMiddlewares, errorMiddlewares, corsMiddlewares} from './core/middlewares/express-middlewars.js'
 const app = express();
 
@@ -21,8 +21,9 @@ app.get('/text', (req , res) =>{
 
 
 app.use(User);
-app.use(Task);
 app.use(Category);
+app.use(Task)
+
 
 app.use(errorMiddlewares);
 

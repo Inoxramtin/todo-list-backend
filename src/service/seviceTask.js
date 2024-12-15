@@ -1,62 +1,37 @@
 
-import { createTask, updateTask, deleteTaskById,findCategoryIdByName,findTaskIdByUserCategoryAndTitle,  getTasksByCategoryId} from '../model/tasks/task.js'
-
-async function getTaskService(userId){
-    const task = await getTasksListByUserId(userId) ;
-    return task;
-}
-
-async function getTaskServiceId(Id){
-    const task = await getTasksListById(Id) ;
-    return task;
-}
-
-async function updateTaskService(categoryName, newDescription, description, is_completed, userId) {
-    const categoryId = await findCategoryIdByName(categoryName, userId);
-    if (!categoryId) {
-        throw new Error('Category not found for this user.');
-    }
-
-    const taskId = await findTaskIdByUserCategoryAndTitle(userId, categoryId, description);
-    if (!taskId) {
-        throw new Error('Task not found for this user in the specified category.');
-    }
-
-    const updatedTask = await updateTask(taskId, categoryId, newDescription, is_completed);
-    return updatedTask;
-}
+import { createTask, updateTask, getTaskByCategoryId, deleteTask} from '../model/tasks/task.js'
 
 
-async function deleteTaskService(Id){
-    const task = await deleteTaskById(Id) ;
-    return task;
-}
 
-
-async function addTask(categoryName, description, is_completed, userId) {
-    const categoryId = await findCategoryIdByName(categoryName, userId); // Correctly assign categoryId
-    if (!categoryId) {
-        throw new Error('Category not found for this user.');
-    }
-    const task = await createTask(categoryId, description, is_completed); // Pass categoryId correctly
-    return task;
-}
-
-
-async function TaskListByCategoryIdService(categoryId, userId) {
+async function createTaskService(userId, categoryId, description, isCompleted) {
     try {
-        const tasks = await getTasksByCategoryId(categoryId, userId);
+        const tasks = await createTask(userId, categoryId, description, isCompleted);
         return tasks;
     } catch (error) {
         console.error('Error fetching tasks:', error);
-        throw error; // Re-throw the error to be handled by the controller
+        throw error; 
     }
 }
+async function updateTaskService(taskId, userId, categoryId, description, isCompleted) {
+    const tasks= await updateTask(taskId, userId, categoryId, description, isCompleted);
+    return tasks;
+}
+
+
+async function getTaskByCategoryIdService(userId, category_id) {
+    const tasks = await getTaskByCategoryId(userId, category_id);
+    return tasks;
+    
+}
+
+async function deleteTaskService(user_id, id , category_id) {
+    const tasks = await deleteTask(user_id, id , category_id)
+    return tasks;
+}
+
 export{
-    getTaskService,
-    getTaskServiceId,
+    createTaskService,
     updateTaskService,
-    deleteTaskService,
-    addTask,
-    TaskListByCategoryIdService
+    getTaskByCategoryIdService,
+    deleteTaskService
 }
